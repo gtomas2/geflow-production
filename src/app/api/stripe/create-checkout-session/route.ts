@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     )
   } catch (error) {
     console.log('🔴 Error', error)
-    //@ts-ignore
+    //@ts-expect-error
     return NextResponse.json({ error: error.message })
   }
 }

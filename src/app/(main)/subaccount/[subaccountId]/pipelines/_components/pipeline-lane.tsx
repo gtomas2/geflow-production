@@ -127,13 +127,13 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
     >
       {(provided, snapshot) => {
         if (snapshot.isDragging) {
-          //@ts-ignore
+          //@ts-expect-error
           const offset = { x: 300, y: 0 }
-          //@ts-ignore
+          //@ts-expect-error
           const x = provided.draggableProps.style?.left - offset.x
-          //@ts-ignore
+          //@ts-expect-error
           const y = provided.draggableProps.style?.top - offset.y
-          //@ts-ignore
+          //@ts-expect-error
           provided.draggableProps.style = {
             ...provided.draggableProps.style,
             top: y,

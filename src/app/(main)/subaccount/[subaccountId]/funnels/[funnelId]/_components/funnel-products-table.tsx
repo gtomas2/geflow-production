@@ -51,7 +51,7 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
 
   const handleAddProduct = async (product: Stripe.Product) => {
     const productIdExists = liveProducts.find(
-      //@ts-ignore
+      //@ts-expect-error
       (prod) => prod.productId === product.default_price.id
     )
     productIdExists
@@ -59,17 +59,17 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
           liveProducts.filter(
             (prod) =>
               prod.productId !==
-              //@ts-ignore
+              //@ts-expect-error
               product.default_price?.id
           )
         )
-      : //@ts-ignore
+      : //@ts-expect-error
         setLiveProducts([
           ...liveProducts,
           {
-            //@ts-ignore
+            //@ts-expect-error
             productId: product.default_price.id as string,
-            //@ts-ignore
+            //@ts-expect-error
             recurring: !!product.default_price.recurring,
           },
         ])
@@ -93,7 +93,7 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
                 <Input
                   defaultChecked={
                     !!liveProducts.find(
-                      //@ts-ignore
+                      //@ts-expect-error
                       (prod) => prod.productId === product.default_price.id
                     )
                   }
@@ -113,14 +113,14 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
               <TableCell>{product.name}</TableCell>
               <TableCell>
                 {
-                  //@ts-ignore
+                  //@ts-expect-error
                   product.default_price?.recurring ? 'Recurring' : 'One Time'
                 }
               </TableCell>
               <TableCell className="text-right">
                 $
                 {
-                  //@ts-ignore
+                  //@ts-expect-error
                   product.default_price?.unit_amount / 100
                 }
               </TableCell>

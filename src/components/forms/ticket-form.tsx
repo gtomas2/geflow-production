@@ -101,7 +101,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
 
       const fetchData = async () => {
         const response = await searchContacts(
-          //@ts-ignore
+          //@ts-expect-error
           defaultData.ticket?.Customer?.name
         )
         setContactList(response)
@@ -286,13 +286,13 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                     className="h-9"
                     value={search}
                     onChangeCapture={async (value) => {
-                      //@ts-ignore
+                      //@ts-expect-error
                       setSearch(value.target.value)
                       if (saveTimerRef.current)
                         clearTimeout(saveTimerRef.current)
                       saveTimerRef.current = setTimeout(async () => {
                         const response = await searchContacts(
-                          //@ts-ignore
+                          //@ts-expect-error
                           value.target.value
                         )
                         setContactList(response)

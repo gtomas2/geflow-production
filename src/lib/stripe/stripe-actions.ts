@@ -25,10 +25,10 @@ export const subscriptionCreated = async (
       agencyId: agency.id,
       customerId,
       currentPeriodEndDate: new Date(subscription.current_period_end * 1000),
-      //@ts-ignore
+      //@ts-expect-error
       priceId: subscription.plan.id,
       subscritiptionId: subscription.id,
-      //@ts-ignore
+      //@ts-expect-error
       plan: subscription.plan.id,
     }
 

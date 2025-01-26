@@ -43,7 +43,7 @@ const SettingsTab = (props: Props) => {
 
   const handleOnChanges = (e: any) => {
     const styleSettings = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [styleSettings]: value,
     }
@@ -64,7 +64,7 @@ const SettingsTab = (props: Props) => {
 
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [settingProperty]: value,
     }

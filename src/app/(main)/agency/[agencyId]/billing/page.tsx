@@ -1,6 +1,6 @@
 import React from 'react'
 import { stripe } from '@/lib/stripe'
-import { addOnProducts, pricingCards } from '@/lib/constants'
+import { pricingCards } from '@/lib/constants'
 import { db } from '@/lib/db'
 import { Separator } from '@/components/ui/separator'
 import PricingCard from './_components/pricing-card'
@@ -19,13 +19,7 @@ type Props = {
   params: { agencyId: string }
 }
 
-//const page = async ({ params }: Props) => {
-  //CHALLENGE : Create the add on  products
-  //const addOns = await stripe.products.list({
-    //ids: addOnProducts.map((product) => product.id),
-    //expand: ['data.default_price'],
-  //})
-
+const page = async ({ params }: Props) => {
   const agencySubscription = await db.agency.findUnique({
     where: {
       id: params.agencyId,
@@ -37,7 +31,7 @@ type Props = {
   })
 
   const prices = await stripe.prices.list({
-    product: process.env.NEXT_GEFLOW_PRODUCT_ID,
+    product: process.env.NEXT_PLURA_PRODUCT_ID,
     active: true,
   })
 
@@ -70,7 +64,7 @@ type Props = {
         planExists={agencySubscription?.Subscription?.active === true}
       />
       <h1 className="text-4xl p-4">Billing</h1>
-      <Separator className=" mb-6" />
+      <Separator className="mb-6" />
       <h2 className="text-2xl p-4">Current Plan</h2>
       <div className="flex flex-col lg:!flex-row justify-between gap-8">
         <PricingCard
@@ -87,8 +81,7 @@ type Props = {
               ? 'Change Plan'
               : 'Get Started'
           }
-          highlightDescription="Want to modify your plan? You can do this here. If you have
-          further question contact support@geflow.northquestconsulting.com"
+          highlightDescription="Want to modify your plan? You can do this here. If you have further question contact support@plura-app.com"
           highlightTitle="Plan Options"
           description={
             agencySubscription?.Subscription?.active === true
@@ -100,38 +93,16 @@ type Props = {
             agencySubscription?.Subscription?.active === true
               ? currentPlanDetails?.features || []
               : currentPlanDetails?.features ||
-                pricingCards.find((pricing) => pricing.title === 'Private Plan')
+                pricingCards.find((pricing) => pricing.title === 'Starter')
                   ?.features ||
                 []
           }
           title={
             agencySubscription?.Subscription?.active === true
-              ? currentPlanDetails?.title || 'Private Plan'
-              : 'Private Plan'
+              ? currentPlanDetails?.title || 'Starter'
+              : 'Starter'
           }
         />
-        {addOns.data.map((addOn) => (
-          <PricingCard
-            planExists={agencySubscription?.Subscription?.active === true}
-            prices={prices.data}
-            customerId={agencySubscription?.customerId || ''}
-            key={addOn.id}
-            amt={
-              //@ts-ignore
-              addOn.default_price?.unit_amount
-                ? //@ts-ignore
-                  `$${addOn.default_price.unit_amount / 100}`
-                : '$0'
-            }
-            buttonCta="Subscribe"
-            description="Dedicated support line & teams channel for support"
-            duration="/ month"
-            features={[]}
-            title={'24/7 priority support'}
-            highlightTitle="Get support now!"
-            highlightDescription="Get priority support and skip the long long with the click of a button."
-          />
-        ))}
       </div>
       <h2 className="text-2xl p-4">Payment History</h2>
       <Table className="bg-card border-[1px] border-border rounded-md">

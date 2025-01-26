@@ -82,7 +82,7 @@ const Checkout = (props: Props) => {
             className: 'z-[100000]',
             variant: 'destructive',
             title: 'Oppse!',
-            //@ts-ignore
+            //@ts-expect-error
             description: error.message,
           })
         }

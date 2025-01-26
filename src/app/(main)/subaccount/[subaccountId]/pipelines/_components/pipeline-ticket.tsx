@@ -123,11 +123,11 @@ const PipelineTicket = ({
       {(provided, snapshot) => {
         if (snapshot.isDragging) {
           const offset = { x: 300, y: 20 }
-          //@ts-ignore
+          //@ts-expect-error
           const x = provided.draggableProps.style?.left - offset.x
-          //@ts-ignore
+          //@ts-expect-error
           const y = provided.draggableProps.style?.top - offset.y
-          //@ts-ignore
+          //@ts-expect-error
           provided.draggableProps.style = {
             ...provided.draggableProps.style,
             top: y,
