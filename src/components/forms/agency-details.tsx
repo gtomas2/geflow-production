@@ -1,7 +1,7 @@
 'use client'
 import { Agency } from '@prisma/client'
 import { useForm } from 'react-hook-form'
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NumberInput } from '@tremor/react'
 import { v4 } from 'uuid'
 
@@ -64,50 +64,36 @@ const FormSchema = z.object({
   zipCode: z.string().min(1),
   state: z.string().min(1),
   country: z.string().min(1),
-  agencyLogo: z.string().optional(),
+  agencyLogo: z.string().min(1),
 })
 
 const AgencyDetails = ({ data }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [deletingAgency, setDeletingAgency] = useState(false)
-  
-  // Memoize default values to prevent unnecessary re-renders
-  const defaultFormValues = useMemo(() => ({
-    name: data?.name || '',
-    companyEmail: data?.companyEmail || '',
-    companyPhone: data?.companyPhone || '',
-    whiteLabel: data?.whiteLabel || false,
-    address: data?.address || '',
-    city: data?.city || '',
-    zipCode: data?.zipCode || '',
-    state: data?.state || '',
-    country: data?.country || '',
-    agencyLogo: data?.agencyLogo || '',
-  }), [data])
-
   const form = useForm<z.infer<typeof FormSchema>>({
     mode: 'onChange',
     resolver: zodResolver(FormSchema),
-    defaultValues: defaultFormValues,
+    defaultValues: {
+      name: data?.name,
+      companyEmail: data?.companyEmail,
+      companyPhone: data?.companyPhone,
+      whiteLabel: data?.whiteLabel || false,
+      address: data?.address,
+      city: data?.city,
+      zipCode: data?.zipCode,
+      state: data?.state,
+      country: data?.country,
+      agencyLogo: data?.agencyLogo,
+    },
   })
-  
   const isLoading = form.formState.isSubmitting
 
-  // Use useCallback to prevent unnecessary function recreations
-  const resetForm = useCallback(() => {
-    if (data) {
-      form.reset({
-        ...data,
-        agencyLogo: data.agencyLogo || '',
-      })
-    }
-  }, [data, form.reset])
-
-  // Trigger form reset when data changes
   useEffect(() => {
-    resetForm()
-  }, [resetForm])
+    if (data) {
+      form.reset(data)
+    }
+  }, [data])
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
@@ -123,7 +109,7 @@ const AgencyDetails = ({ data }: Props) => {
               country: values.country,
               line1: values.address,
               postal_code: values.zipCode,
-              state: values.state,
+              state: values.zipCode,
             },
             name: values.name,
           },
@@ -132,7 +118,7 @@ const AgencyDetails = ({ data }: Props) => {
             country: values.country,
             line1: values.address,
             postal_code: values.zipCode,
-            state: values.state,
+            state: values.zipCode,
           },
         }
 
@@ -155,7 +141,7 @@ const AgencyDetails = ({ data }: Props) => {
         id: data?.id ? data.id : v4(),
         customerId: data?.customerId || custId || '',
         address: values.address,
-        agencyLogo: values.agencyLogo || '',
+        agencyLogo: values.agencyLogo,
         city: values.city,
         companyPhone: values.companyPhone,
         country: values.country,
@@ -169,28 +155,26 @@ const AgencyDetails = ({ data }: Props) => {
         connectAccountId: '',
         goal: 5,
       })
-      
       toast({
         title: 'Created Agency',
       })
-      
       if (data?.id) return router.refresh()
       if (response) {
         return router.refresh()
       }
     } catch (error) {
-      console.error(error)
+      console.log(error)
       toast({
         variant: 'destructive',
-        title: 'Oops!',
-        description: 'Could not create your agency',
+        title: 'Oppse!',
+        description: 'could not create your agency',
       })
     }
   }
-
   const handleDeleteAgency = async () => {
     if (!data?.id) return
     setDeletingAgency(true)
+    //WIP: discontinue the subscription
     try {
       const response = await deleteAgency(data.id)
       toast({
@@ -202,7 +186,7 @@ const AgencyDetails = ({ data }: Props) => {
       console.log(error)
       toast({
         variant: 'destructive',
-        title: 'Oops!',
+        title: 'Oppse!',
         description: 'could not delete your agency ',
       })
     }
@@ -235,9 +219,7 @@ const AgencyDetails = ({ data }: Props) => {
                     <FormControl>
                       <FileUpload
                         apiEndpoint="agencyLogo"
-                        onChange={(url) => {
-                          field.onChange(url || '')
-                        }}
+                        onChange={field.onChange}
                         value={field.value}
                       />
                     </FormControl>

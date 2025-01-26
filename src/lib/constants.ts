@@ -29,37 +29,38 @@ import Wallet from '@/components/icons/wallet'
 import Warning from '@/components/icons/warning'
 export const pricingCards = [
   {
-    title: 'Starter',
-    description: 'Perfect for trying out Geflow',
+    title: 'Private Plan',
+    description: 'Reserved for NorthQuest Consulting',
     price: 'Free',
     duration: '',
     highlight: 'Key features',
-    features: ['3 Sub accounts', '2 Team members', 'Unlimited pipelines'],
+    features: ['Unlimited'],
     priceId: '',
   },
   {
-    title: 'Unlimited Saas',
-    description: 'The ultimate agency kit',
-    price: '$199',
+    title: 'Pro Plan',
+    description: 'Scale your agency',
+    price: '$289',
     duration: 'month',
     highlight: 'Key features',
-    features: ['Rebilling', '24/7 Support team'],
-    priceId: 'price_1OYxkqFj9oKEERu1KfJGWxgN',
+    features: ['Up to 5 team members', 'Unlimited funnels', 'Unlimited sub-accounts', 'Unlimited kanbans', '10GB of storage'],
+    priceId: 'price_1QkucqKH930Qw1VCDprrCXTu',
   },
   {
-    title: 'Basic',
-    description: 'For serious agency owners',
-    price: '$49',
+    title: 'Standard Plan',
+    description: 'Run your agency',
+    price: '$89',
     duration: 'month',
-    highlight: 'Everything in Starter, plus',
-    features: ['Unlimited Sub accounts', 'Unlimited Team members'],
-    priceId: 'price_1OYxkqFj9oKEERu1NbKUxXxN',
+    highlight: '',
+    features: ['Up to 2 team members', 'Unlimited funnels', '2 sub-accounts', 'Unlimited kanbans', '2GB of storage'],
+    priceId: 'price_1QkucqKH930Qw1VChn7kPPg8',
   },
 ]
 
-export const addOnProducts = [
-  { title: 'Priority Support', id: 'prod_PNjJAE2EpP16pn' },
-]
+// add on product
+//export const addOnProducts = [
+  //{ title: 'Priority Support', id: 'prod_ReDLRC6jLhooPR' },
+//]
 
 export const icons = [
   {

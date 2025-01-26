@@ -1,16 +1,30 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { pricingCards } from '@/lib/constants'
+import { stripe } from '@/lib/stripe'
 import clsx from 'clsx'
 import { Check } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Home() {
+export default async function Home() {
+  const prices = await stripe.prices.list({
+    product: process.env.NEXT_GEFLOW_PRODUCT_ID,
+    active: true,
+  })
+
   return (
     <>
-      <section className="h-full w-full pt-36 relative flex items-center justify flex-col">
+      <section className="h-full w-full md:pt-44 mt-[-70px] relative flex items-center justify-center flex-col ">
         {/* grid */}
-        <div className="absolute bottom-0 left-0 right-0 top-0 bg-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
 
         <p className="text-center">Run your agency, in one place</p>
         <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
@@ -29,64 +43,74 @@ export default function Home() {
           <div className="bottom-0 top-[50%] bg-gradient-to-t dark:from-background left-0 right-0 absolute z-10"></div>
         </div>
       </section>
-
-      <section className="flex justify-center flex-col gap-4 mt-[-40px] md:mt-[60px] lg:mt-[120px]"> {/* Margin adjustment for larger screens */}
-        <h2 className="text-4xl text-center mb-4 md:mb-6 lg:mb-8"> {/* Adjusting spacing for large screens */}
-          Choose what fits you right
-        </h2>
-        <p className="text-muted-foreground text-center max-w-4xl mx-auto mb-6 md:mb-8 lg:mb-10"> {/* Margin adjustments for large screens */}
+      <section className="flex justify-center items-center flex-col gap-4 md:!mt-20 mt-[-60px]">
+        <h2 className="text-4xl text-center"> Choose what fits you right</h2>
+        <p className="text-muted-foreground text-center">
           Our straightforward pricing plans are tailored to meet your needs. If
-          {" you're"} not ready to commit, you can get started for free.
+          {" you're"} not <br />
+          ready to commit you can get started for free.
         </p>
-        <div className="flex justify-center gap-4 flex-wrap mt-6 lg:mt-8"> {/* Margin adjustment for large screens */}
-          {pricingCards.map((card) => (
+        <div className="flex  justify-center gap-4 flex-wrap mt-6">
+          {prices.data.map((card) => (
+            //WIP: Wire up free product from stripe
             <Card
-              key={card.title}
+              key={card.nickname}
               className={clsx('w-[300px] flex flex-col justify-between', {
-                'border-2 border-primary': card.title === 'Unlimited Saas',
+                'border-2 border-primary': card.nickname === 'Pro Plan',
               })}
             >
               <CardHeader>
                 <CardTitle
                   className={clsx('', {
-                    'text-muted-foreground': card.title !== 'Unlimited Saas',
+                    'text-muted-foreground': card.nickname !== 'Pro Plan',
                   })}
                 >
-                  {card.title}
+                  {card.nickname}
                 </CardTitle>
-                <CardDescription>{card.description}</CardDescription>
+                <CardDescription>
+                  {
+                    pricingCards.find((c) => c.title === card.nickname)
+                      ?.description
+                  }
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <span className="text-4xl font-bold">{card.price}</span>
-                <span className="text-muted-foreground">/m</span>
+                <span className="text-4xl font-bold">
+                  {card.unit_amount && card.unit_amount / 100}
+                </span>
+                <span className="text-muted-foreground">
+                  <span>/ {card.recurring?.interval}</span>
+                </span>
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-4">
                 <div>
-                  {card.features.map((feature) => (
-                    <div key={feature} className="flex gap-2 items-center">
-                      <Check className="text-muted-foreground" />
-                      <p>{feature}</p>
-                    </div>
-                  ))}
+                  {pricingCards
+                    .find((c) => c.title === card.nickname)
+                    ?.features.map((feature) => (
+                      <div
+                        key={feature}
+                        className="flex gap-2"
+                      >
+                        <Check />
+                        <p>{feature}</p>
+                      </div>
+                    ))}
                 </div>
                 <Link
-                  href={`/agency?plan=${card.priceId}`}
+                  href={`/agency?plan=${card.id}`}
                   className={clsx(
                     'w-full text-center bg-primary p-2 rounded-md',
                     {
-                      '!bg-muted-foreground': card.title !== 'Unlimited Saas',
+                      '!bg-muted-foreground':
+                        card.nickname !== 'Pro Plan',
                     }
                   )}
                 >
                   Get Started
-
-
                 </Link>
               </CardFooter>
             </Card>
           ))}
-
-          {/* Explicit $0 plan/ that is why it is double */}
           <Card className={clsx('w-[300px] flex flex-col justify-between')}>
             <CardHeader>
               <CardTitle
@@ -99,17 +123,22 @@ export default function Home() {
               <CardDescription>{pricingCards[0].description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <span className="text-4xl font-bold">$0</span>
-              <span>/ month</span>
+              <span className="text-4xl font-bold"></span>
+              <span></span>
             </CardContent>
-            <CardFooter className="flex flex-col items-start gap-4">
+            <CardFooter className="flex flex-col  items-start gap-4 ">
               <div>
-                {pricingCards[0].features.map((feature) => (
-                  <div key={feature} className="flex gap-2">
-                    <Check />
-                    <p>{feature}</p>
-                  </div>
-                ))}
+                {pricingCards
+                  .find((c) => c.title === 'Private Plan')
+                  ?.features.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex gap-2"
+                    >
+                      <Check />
+                      <p>{feature}</p>
+                    </div>
+                  ))}
               </div>
               <Link
                 href="/agency"
