@@ -14,9 +14,7 @@ import LinkPlaceholder from './link-placeholder'
 import ContactFormComponentPlaceholder from './contact-form-placeholder'
 import CheckoutPlaceholder from './checkout-placeholder'
 
-type Props = {}
-
-const ComponentsTab = (props: Props) => {
+const ComponentsTab = () => {
   const elements: {
     Component: React.ReactNode
     label: string
