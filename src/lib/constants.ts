@@ -57,7 +57,7 @@ export const pricingCards = [
   },
 ]
 
-// add on product
+//add on products
 //export const addOnProducts = [
   //{ title: 'Priority Support', id: 'prod_ReDLRC6jLhooPR' },
 //]
