@@ -36,7 +36,7 @@ const SubscriptionHelper = ({ customerId, planExists, prices }: Props) => {
           },
         })
       )
-  }, [plan])
+  }, [plan, customerId, planExists, prices, setOpen]) // Added missing dependencies
 
   return <div>SubscriptionHelper</div>
 }

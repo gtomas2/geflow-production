@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs' // Removed TabsContent import
 import {
   Tooltip,
   TooltipContent,
@@ -46,7 +46,7 @@ const FunnelEditorNavigation = ({
       type: 'SET_FUNNELPAGE_ID',
       payload: { funnelPageId: funnelPageDetails.id },
     })
-  }, [funnelPageDetails])
+  }, [funnelPageDetails, dispatch])  // Added dispatch to dependency array
 
   const handleOnBlurTitleChange: FocusEventHandler<HTMLInputElement> = async (
     event
@@ -211,9 +211,7 @@ const FunnelEditorNavigation = ({
             <Undo2 />
           </Button>
           <Button
-            disabled={
-              !(state.history.currentIndex < state.history.history.length - 1)
-            }
+            disabled={!(state.history.currentIndex < state.history.history.length - 1)}
             onClick={handleRedo}
             variant={'ghost'}
             size={'icon'}

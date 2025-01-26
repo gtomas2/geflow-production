@@ -1,15 +1,12 @@
-import { EditorBtns } from '@/lib/constants'
-import { Youtube } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
-type Props = {}
-
-const CheckoutPlaceholder = (props: Props) => {
-  const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
+const CheckoutPlaceholder = () => {
+  const handleDragStart = (e: React.DragEvent, type: 'paymentForm') => {
     if (type === null) return
     e.dataTransfer.setData('componentType', type)
   }
+
   return (
     <div
       draggable

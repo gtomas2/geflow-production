@@ -1,10 +1,10 @@
 import Unauthorized from '@/components/unauthorized'
 import React from 'react'
 
-type Props = {}
+type Props = object
 
 const Page = (props: Props) => {
-  return <Unauthorized />
+  return <Unauthorized {...props} />
 }
 
 export default Page

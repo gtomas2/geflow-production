@@ -15,6 +15,16 @@ type Props = {
   params: { agencyId: string }
 }
 
+// Define the shape of a notification
+type Notification = {
+  id: string
+  message: string
+  User: {
+    role: string
+  }
+  // Add other fields as necessary
+}
+
 const layout = async ({ children, params }: Props) => {
   const agencyId = await verifyAndAcceptInvitation()
   const user = await currentUser()
@@ -33,11 +43,9 @@ const layout = async ({ children, params }: Props) => {
   )
     return <Unauthorized />
 
-  let allNoti: any = []
+  let allNoti: Notification[] = []  // Use the Notification type
   const notifications = await getNotificationAndUser(agencyId)
   if (notifications) allNoti = notifications
-
- 
 
   return (
     <div className="h-screen overflow-hidden">
@@ -48,7 +56,7 @@ const layout = async ({ children, params }: Props) => {
       <div className="md:pl-[300px]">
         <InfoBar
           notifications={allNoti}
-          role={allNoti.User?.role}
+          role={allNoti[0]?.User?.role}  {/* Adjusted to safely access role */}
         />
         <div className="relative">
           <BlurPage>{children}</BlurPage>

@@ -86,7 +86,7 @@ const ContactFormComponent = (props: Props) => {
         description: 'Successfully Saved your info',
       })
       await goToNextPage()
-    } catch (error) {
+    } catch {
       toast({
         variant: 'destructive',
         title: 'Failed',

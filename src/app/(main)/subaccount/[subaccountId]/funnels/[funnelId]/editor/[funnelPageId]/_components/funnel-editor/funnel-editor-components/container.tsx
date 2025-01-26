@@ -11,7 +11,7 @@ import { Trash } from 'lucide-react'
 type Props = { element: EditorElement }
 
 const Container = ({ element }: Props) => {
-  const { id, content, name, styles, type } = element
+  const { id, content, styles } = element // Removed unused 'name' and 'type'
   const { dispatch, state } = useEditor()
 
   const handleOnDrop = (e: React.DragEvent, type: string) => {
@@ -185,11 +185,11 @@ const Container = ({ element }: Props) => {
     <div
       style={styles}
       className={clsx('relative p-4 transition-all group', {
-        'max-w-full w-full': type === 'container' || type === '2Col',
-        'h-fit': type === 'container',
-        'h-full': type === '__body',
-        'overflow-scroll ': type === '__body',
-        'flex flex-col md:!flex-row': type === '2Col',
+        'max-w-full w-full': element.type === 'container' || element.type === '2Col',
+        'h-fit': element.type === 'container',
+        'h-full': element.type === '__body',
+        'overflow-scroll ': element.type === '__body',
+        'flex flex-col md:!flex-row': element.type === '2Col',
         '!border-blue-500':
           state.editor.selectedElement.id === id &&
           !state.editor.liveMode &&
@@ -204,7 +204,7 @@ const Container = ({ element }: Props) => {
       })}
       onDrop={(e) => handleOnDrop(e, id)}
       onDragOver={handleDragOver}
-      draggable={type !== '__body'}
+      draggable={element.type !== '__body'}
       onClick={handleOnClickBody}
       onDragStart={(e) => handleDragStart(e, 'container')}
     >

@@ -19,7 +19,7 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
         payload: { value: true },
       })
     }
-  }, [liveMode])
+  }, [liveMode, dispatch])  // Added dispatch to the dependency array
 
   //CHALLENGE: make this more performant
   useEffect(() => {
@@ -36,7 +36,7 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
       })
     }
     fetchData()
-  }, [funnelPageId])
+  }, [funnelPageId, dispatch, liveMode])  // Added dispatch and liveMode to the dependency array
 
   const handleClick = () => {
     dispatch({

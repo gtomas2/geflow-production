@@ -1,3 +1,4 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -29,7 +30,6 @@ const LaunchPadPage = async ({ params, searchParams }: Props) => {
   if (!agencyDetails) return
 
   const allDetailsExist =
-    agencyDetails.address &&
     agencyDetails.address &&
     agencyDetails.agencyLogo &&
     agencyDetails.city &&

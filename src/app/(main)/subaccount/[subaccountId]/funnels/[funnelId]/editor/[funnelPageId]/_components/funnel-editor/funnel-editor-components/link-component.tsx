@@ -1,13 +1,10 @@
-'use client'
+import React, { useRef } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { EditorBtns } from '@/lib/constants'
-
 import { EditorElement, useEditor } from '@/providers/editor/editor-provider'
 import clsx from 'clsx'
 import { Trash } from 'lucide-react'
 import Link from 'next/link'
-
-import React, { useRef } from 'react'
 
 type Props = {
   element: EditorElement
@@ -15,6 +12,9 @@ type Props = {
 
 const LinkComponent = (props: Props) => {
   const { dispatch, state } = useEditor()
+
+  // Create the ref for the Link component
+  const linkRef = useRef<HTMLAnchorElement>(null)
 
   const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
     if (type === null) return
@@ -31,8 +31,6 @@ const LinkComponent = (props: Props) => {
     })
   }
 
-  const styles = props.element.styles
-
   const handleDeleteElement = () => {
     dispatch({
       type: 'DELETE_ELEMENT',
@@ -40,9 +38,14 @@ const LinkComponent = (props: Props) => {
     })
   }
 
+  // Example of how to use the ref (e.g., focusing the link)
+  const handleFocusLink = () => {
+    linkRef.current?.focus()  // This will focus the link if needed
+  }
+
   return (
     <div
-      style={styles}
+      style={props.element.styles}
       draggable
       onDragStart={(e) => handleDragStart(e, 'text')}
       onClick={handleOnClickBody}
@@ -51,7 +54,6 @@ const LinkComponent = (props: Props) => {
         {
           '!border-blue-500':
             state.editor.selectedElement.id === props.element.id,
-
           '!border-solid': state.editor.selectedElement.id === props.element.id,
           'border-dashed border-[1px] border-slate-300': !state.editor.liveMode,
         }
@@ -63,12 +65,14 @@ const LinkComponent = (props: Props) => {
             {state.editor.selectedElement.name}
           </Badge>
         )}
+
       {!Array.isArray(props.element.content) &&
         (state.editor.previewMode || state.editor.liveMode) && (
-          <Link href={props.element.content.href || '#'}>
+          <Link href={props.element.content.href || '#'} ref={linkRef}>
             {props.element.content.innerText}
           </Link>
         )}
+
       {!state.editor.previewMode && !state.editor.liveMode && (
         <span
           contentEditable={!state.editor.liveMode}
@@ -91,9 +95,10 @@ const LinkComponent = (props: Props) => {
             props.element.content.innerText}
         </span>
       )}
+
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
-          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold  -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
+          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
             <Trash
               className="cursor-pointer"
               size={16}

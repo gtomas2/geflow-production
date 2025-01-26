@@ -13,10 +13,10 @@ type Props = {
 }
 
 const TwoColumns = (props: Props) => {
-  const { id, content, type } = props.element
+  const { id, content } = props.element
   const { dispatch, state } = useEditor()
 
-  const handleOnDrop = (e: React.DragEvent, type: string) => {
+  const handleOnDrop = (e: React.DragEvent) => {
     e.stopPropagation()
     const componentType = e.dataTransfer.getData('componentType') as EditorBtns
     switch (componentType) {
@@ -93,9 +93,9 @@ const TwoColumns = (props: Props) => {
     <div
       style={props.element.styles}
       className={clsx('relative p-4 transition-all', {
-        'h-fit': type === 'container',
-        'h-full': type === '__body',
-        'm-4': type === 'container',
+        'h-fit': props.element.type === 'container',
+        'h-full': props.element.type === '__body',
+        'm-4': props.element.type === 'container',
         '!border-blue-500':
           state.editor.selectedElement.id === props.element.id &&
           !state.editor.liveMode,
@@ -105,9 +105,9 @@ const TwoColumns = (props: Props) => {
         'border-dashed border-[1px] border-slate-300': !state.editor.liveMode,
       })}
       id="innerContainer"
-      onDrop={(e) => handleOnDrop(e, id)}
+      onDrop={(e) => handleOnDrop(e)}
       onDragOver={handleDragOver}
-      draggable={type !== '__body'}
+      draggable={props.element.type !== '__body'}
       onClick={handleOnClickBody}
       onDragStart={(e) => handleDragStart(e, 'container')}
     >
