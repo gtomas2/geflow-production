@@ -51,29 +51,32 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
 
   const handleAddProduct = async (product: Stripe.Product) => {
     const productIdExists = liveProducts.find(
-      //@ts-expect-error
+      //@ts-expect-error "Checking if the productId already exists in liveProducts"
       (prod) => prod.productId === product.default_price.id
     )
-    productIdExists
-      ? setLiveProducts(
-          liveProducts.filter(
-            (prod) =>
-              prod.productId !==
-              //@ts-expect-error
-              product.default_price?.id
-          )
+    if (productIdExists) {
+      setLiveProducts(
+        liveProducts.filter(
+          (prod) =>
+            prod.productId !==
+            //@ts-expect-error "Removing productId from liveProducts"
+            product.default_price?.id
         )
-      : //@ts-expect-error
-        setLiveProducts([
-          ...liveProducts,
-          {
-            //@ts-expect-error
-            productId: product.default_price.id as string,
-            //@ts-expect-error
-            recurring: !!product.default_price.recurring,
-          },
-        ])
+      )
+    } else {
+      //@ts-expect-error "Adding new productId to liveProducts"
+      setLiveProducts([
+        ...liveProducts,
+        {
+          //@ts-expect-error "Assigning productId and recurring to new product"
+          productId: product.default_price.id as string,
+          //@ts-expect-error "Assigning recurring status to new product"
+          recurring: !!product.default_price.recurring,
+        },
+      ])
+    }
   }
+
   return (
     <>
       <Table className="bg-card border-[1px] border-border rounded-md">
@@ -93,7 +96,7 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
                 <Input
                   defaultChecked={
                     !!liveProducts.find(
-                      //@ts-expect-error
+                      //@ts-expect-error "Checking if product is already selected"
                       (prod) => prod.productId === product.default_price.id
                     )
                   }
@@ -113,14 +116,13 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
               <TableCell>{product.name}</TableCell>
               <TableCell>
                 {
-                  //@ts-expect-error
+                  //@ts-expect-error "Checking if the product is recurring"
                   product.default_price?.recurring ? 'Recurring' : 'One Time'
                 }
               </TableCell>
               <TableCell className="text-right">
-                $
-                {
-                  //@ts-expect-error
+                $ {
+                  //@ts-expect-error "Displaying the unit amount of the product"
                   product.default_price?.unit_amount / 100
                 }
               </TableCell>
